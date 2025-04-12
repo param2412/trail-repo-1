@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Paths - Career Advisor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .career-card {
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .career-card:hover {
+            transform: translateY(-5px);
+        }
+        .qa-section {
+            background-color: #f0f7ff;
+            padding: 2rem 0;
+            margin: 2rem 0;
+            border-radius: 10px;
+        }
+        .qa-form {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .qa-response {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .question-box {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .answer-box {
+            background-color: #e8f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #0d6efd;
+        }
+        .markdown-body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* Improved footer styling */
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 2rem;
+        }
+        .footer-heading {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+        .footer-heading:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 40px;
+            height: 2px;
+            background-color: #0d6efd;
+        }
+        .footer-links {
+            list-style: none;
+            padding-left: 0;
+        }
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        .footer-links a {
+            color: #dee2e6;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        .footer-contact {
+            color: #dee2e6;
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #adb5bd;
+        }
+        .social-icons {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .social-icons li a {
+            color: white;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Career Advisor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/career-paths/">Career Paths</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api/">API</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login/">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup/">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Career Paths</h1>
+            <p class="lead">Explore various career paths and get personalized advice</p>
+        </div>
+    </header>
+
+    <!-- Career Paths Section -->
+    <section class="container">
+        <h2 class="mb-4">Popular Career Paths</h2>
+        <div class="row" id="careerPathsContainer">
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p>Loading career paths...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Career Q&A Section -->
+    <section class="qa-section">
+        <div class="container">
+            <h2 class="text-center mb-4">
+                <span>Career Path Q&A</span>
+                <span class="badge bg-primary ms-2">AI Powered</span>
+            </h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <!-- Question Form -->
+                    <div class="qa-form">
+                        <h3>Ask about a career path:</h3>
+                        <form id="careerQuestionForm">
+                            <div class="mb-3">
+                                <textarea class="form-control" id="careerQuestion" rows="4" placeholder="Example: What skills should I learn for a career in data science? What's the career path for a UX designer?"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submitButton">Get Career Advice</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Response Container (initially hidden) -->
+                    <div class="qa-response" id="responseContainer" style="display: none;">
+                        <h3>Career Advisor Response</h3>
+                        <div id="loadingIndicator" class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Generating personalized advice...</p>
+                        </div>
+                        <div id="responseContent" style="display: none;">
+                            <div class="question-box" id="questionDisplay"></div>
+                            <div class="answer-box">
+                                <div class="markdown-body" id="answerDisplay"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Improved Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <h5 class="footer-heading">Career Advisor</h5>
+                    <p>Your trusted partner in career development and professional growth. We help individuals navigate their career journey with confidence.</p>
+                    <ul class="social-icons">
+                        <li><a href="#"><i class="bi bi-facebook"></i></a></li>
+                        <li><a href="#"><i class="bi bi-twitter"></i></a></li>
+                        <li><a href="#"><i class="bi bi-linkedin"></i></a></li>
+                        <li><a href="#"><i class="bi bi-instagram"></i></a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h5 class="footer-heading">Explore</h5>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/career-paths/">Career Paths</a></li>
+                        <li><a href="/api/">API</a></li>
+                        <li><a href="#">Resources</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h5 class="footer-heading">Account</h5>
+                    <ul class="footer-links">
+                        <li><a href="/login/">Login</a></li>
+                        <li><a href="/signup/">Sign Up</a></li>
+                        <li><a href="/forgot-password/">Reset Password</a></li>
+                        <li><a href="#">My Profile</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <h5 class="footer-heading">Contact Us</h5>
+                    <div class="footer-contact">
+                        <p><i class="bi bi-geo-alt me-2"></i> 123 Career Street, Suite 101<br>San Francisco, CA 94107</p>
+                        <p><i class="bi bi-envelope me-2"></i> info@careeradvisor.example</p>
+                        <p><i class="bi bi-telephone me-2"></i> +1 (555) 123-4567</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 Career Advisor Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load career paths
+            loadCareerPaths();
+            
+            // Set up form submission
+            document.getElementById('careerQuestionForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                askQuestion();
+            });
+        });
+        
+        // Load career paths from API
+        function loadCareerPaths() {
+            fetch('/api/career-paths/')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('careerPathsContainer');
+                    container.innerHTML = '';
+                    
+                    if (data.length === 0) {
+                        container.innerHTML = '<div class="col-12"><div class="alert alert-info">No career paths found</div></div>';
+                        return;
+                    }
+                    
+                    data.forEach(path => {
+                        const col = document.createElement('div');
+                        col.className = 'col-md-6 col-lg-4 mb-4';
+                        
+                        col.innerHTML = `
+                            <div class="card career-card">
+                                <div class="card-body">
+                                    <h4 class="card-title">${path.name}</h4>
+                                    <p class="card-text">${path.description || 'No description available'}</p>
+                                    <button class="btn btn-outline-primary" 
+                                        onclick="document.getElementById('careerQuestion').value = 'Tell me about a career in ${path.name}'; document.getElementById('careerQuestion').scrollIntoView({behavior: 'smooth'});">
+                                        Ask about this career
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        container.appendChild(col);
+                    });
+                })
+                .catch(error => {
+                    const container = document.getElementById('careerPathsContainer');
+                    container.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-danger">
+                                Error loading career paths: ${error.message}
+                            </div>
+                        </div>
+                    `;
+                });
+        }
+        
+        // Ask a question
+        function askQuestion() {
+            const question = document.getElementById('careerQuestion').value.trim();
+            if (!question) {
+                alert('Please enter a question');
+                return;
+            }
+            
+            // Show the Q&A container if it's hidden
+            const responseContainer = document.getElementById('responseContainer');
+            responseContainer.style.display = 'block';
+            
+            // Show loading, hide content
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('responseContent').style.display = 'none';
+            
+            // Display the question
+            document.getElementById('questionDisplay').textContent = question;
+            
+            // Disable submit button
+            document.getElementById('submitButton').disabled = true;
+            
+            // Send request to the backend
+            fetch('/api/career-advice/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading, show content
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('responseContent').style.display = 'block';
+                
+                // Convert markdown response to HTML
+                const converter = new showdown.Converter();
+                const html = converter.makeHtml(data.response);
+                
+                // Display the answer
+                document.getElementById('answerDisplay').innerHTML = html;
+                
+                // Re-enable submit button
+                document.getElementById('submitButton').disabled = false;
+                
+                // Scroll to the answer
+                document.getElementById('responseContent').scrollIntoView({behavior: 'smooth'});
+            })
+            .catch(error => {
+                // Hide loading, show content
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('responseContent').style.display = 'block';
+                
+                // Display error
+                document.getElementById('answerDisplay').innerHTML = 
+                    `<div class="text-danger">Error: ${error.message}. Please try again.</div>`;
+                
+                // Re-enable submit button
+                document.getElementById('submitButton').disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
