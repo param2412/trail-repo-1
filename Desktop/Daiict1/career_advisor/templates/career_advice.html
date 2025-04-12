@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Advisor - Get Advice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        .btn-primary {
+            background-color: #6610f2;
+            border-color: #6610f2;
+        }
+        .btn-primary:hover {
+            background-color: #520dc2;
+            border-color: #520dc2;
+        }
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .user-message {
+            background-color: #d1ecf1;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            max-width: 80%;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .advisor-message {
+            background-color: #e2e3e5;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            max-width: 80%;
+        }
+        .thinking {
+            font-style: italic;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Career Advisor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/career-advice/">Career Advice</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api/">API</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/">Admin</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Career Advisor AI</h1>
+            <p class="lead">Get personalized career advice and answers to your questions</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Career Advice Chat</h5>
+                        <div class="chat-container" id="chatContainer">
+                            <div class="advisor-message">
+                                Hello! I'm your Career Advisor AI. I can help answer questions about career paths, skills to develop, job market trends, and provide personalized career advice. What would you like to know about?
+                            </div>
+                        </div>
+                        <form id="questionForm" class="mt-3">
+                            <div class="input-group">
+                                <input type="text" id="userQuestion" class="form-control" placeholder="Ask a career-related question..." required>
+                                <button class="btn btn-primary" type="submit" id="submitBtn">Send</button>
+                            </div>
+                            <div class="form-text">
+                                Examples: "What skills should I learn for a career in data science?", "How do I transition from marketing to product management?", "What career paths are best for someone interested in sustainability?"
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Popular Career Paths</h5>
+                        <div id="careerPathsList" class="list-group">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <p>© 2025 Career Advisor Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load career paths
+            fetch('/api/career-paths/')
+                .then(response => response.json())
+                .then(data => {
+                    const careerPathsList = document.getElementById('careerPathsList');
+                    careerPathsList.innerHTML = '';
+                    
+                    if (data.length === 0) {
+                        careerPathsList.innerHTML = '<div class="alert alert-info">No career paths found.</div>';
+                        return;
+                    }
+                    
+                    data.forEach(path => {
+                        const item = document.createElement('a');
+                        item.href = '#';
+                        item.className = 'list-group-item list-group-item-action';
+                        item.innerHTML = `
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">${path.name}</h5>
+                            </div>
+                            <p class="mb-1">${path.description || 'No description available'}</p>
+                            <small>Skills: ${path.skills && path.skills.length ? path.skills.join(', ') : 'None specified'}</small>
+                        `;
+                        
+                        // Add click event to ask about this career path
+                        item.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            document.getElementById('userQuestion').value = `Tell me more about a career in ${path.name}`;
+                            // Optional: Auto-submit the form
+                            document.getElementById('questionForm').dispatchEvent(new Event('submit'));
+                        });
+                        
+                        careerPathsList.appendChild(item);
+                    });
+                })
+                .catch(error => {
+                    const careerPathsList = document.getElementById('careerPathsList');
+                    careerPathsList.innerHTML = `
+                        <div class="alert alert-danger">
+                            Failed to load career paths: ${error.message}
+                        </div>
+                    `;
+                });
+            
+            // Handle form submission
+            document.getElementById('questionForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const userQuestion = document.getElementById('userQuestion').value.trim();
+                if (!userQuestion) return;
+                
+                // Add user message to chat
+                const chatContainer = document.getElementById('chatContainer');
+                const userMessageDiv = document.createElement('div');
+                userMessageDiv.className = 'user-message';
+                userMessageDiv.textContent = userQuestion;
+                chatContainer.appendChild(userMessageDiv);
+                
+                // Add "thinking" message
+                const thinkingDiv = document.createElement('div');
+                thinkingDiv.className = 'advisor-message thinking';
+                thinkingDiv.textContent = 'Thinking...';
+                chatContainer.appendChild(thinkingDiv);
+                
+                // Scroll to bottom of chat
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // Clear input field
+                document.getElementById('userQuestion').value = '';
+                document.getElementById('submitBtn').disabled = true;
+                
+                // Call API to get answer
+                fetch('/api/career-advice/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question: userQuestion })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Remove thinking message
+                    chatContainer.removeChild(thinkingDiv);
+                    
+                    // Add advisor response
+                    const advisorMessageDiv = document.createElement('div');
+                    advisorMessageDiv.className = 'advisor-message';
+                    advisorMessageDiv.textContent = data.response || 'I apologize, but I cannot generate a response at the moment.';
+                    chatContainer.appendChild(advisorMessageDiv);
+                    
+                    // Scroll to bottom of chat
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                    
+                    // Re-enable submit button
+                    document.getElementById('submitBtn').disabled = false;
+                })
+                .catch(error => {
+                    // Remove thinking message
+                    chatContainer.removeChild(thinkingDiv);
+                    
+                    // Add error message
+                    const errorMessageDiv = document.createElement('div');
+                    errorMessageDiv.className = 'advisor-message';
+                    errorMessageDiv.innerHTML = `<span class="text-danger">Sorry, I encountered an error: ${error.message}. Please try again.</span>`;
+                    chatContainer.appendChild(errorMessageDiv);
+                    
+                    // Re-enable submit button
+                    document.getElementById('submitBtn').disabled = false;
+                    
+                    // Scroll to bottom of chat
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

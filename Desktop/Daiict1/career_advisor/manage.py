@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+"""Django's command-line utility for administrative tasks."""
+import os
+import sys
+
+
+def main():
+    """Run administrative tasks."""
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'career_advisor.settings')
+    try:
+        try:
+            from django.core.management import execute_from_command_line
+        except ModuleNotFoundError:
+            raise ImportError(
+            "Couldn't import Django. Make sure Django is installed and "
+            "available in your environment. You may need to install it using 'pip install django'."
+            )
+    except ImportError as exc:
+        raise ImportError(
+            "Couldn't import Django. Are you sure it's installed and "
+            "available on your PYTHONPATH environment variable? Did you "
+            "forget to activate a virtual environment?"
+        ) from exc
+    execute_from_command_line(sys.argv)
+
+
+if __name__ == '__main__':
+    main()
